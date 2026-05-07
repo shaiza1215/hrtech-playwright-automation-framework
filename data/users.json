@@ -1,0 +1,10 @@
+{
+    "validRecruiter":{
+        "email":"recruiter@recruitiq.com",
+        "password":"Password@123"
+    },
+    "invalidRecruiter":{
+        "email":"invalid@recruitiq.com",
+        "password":"WrongPassword@123"
+    }
+}
