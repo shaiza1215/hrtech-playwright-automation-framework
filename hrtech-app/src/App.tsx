@@ -4,8 +4,16 @@ import './App.css';
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activePage, setActivePage] = useState('dashboard');
+
+  const [jobTitle, setJobTitle] = useState('');
+  const [department, setDepartment] = useState('');
+  const [location, setLocation] = useState('');
+  const [employmentType, setEmploymentType] = useState('');
+  const [jobFormMessage, setJobFormMessage] = useState('');
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,10 +26,25 @@ function App() {
     if (email === 'recruiter@recruitiq.com' && password === 'Password@123') {
       setError('');
       setIsLoggedIn(true);
+      setActivePage('dashboard');
       return;
     }
 
     setError('Invalid email or password');
+  };
+
+  const handleCreateJob = () => {
+    if (!jobTitle || !department || !location || !employmentType) {
+      setJobFormMessage('Please fill all job details');
+      return;
+    }
+
+    setJobFormMessage('Job created successfully');
+
+    setJobTitle('');
+    setDepartment('');
+    setLocation('');
+    setEmploymentType('');
   };
 
   if (isLoggedIn) {
@@ -37,56 +60,192 @@ function App() {
           </div>
 
           <nav className="sidebar-nav">
-            <div className="nav-item active">Dashboard</div>
-            <div className="nav-item">Jobs</div>
-            <div className="nav-item">Assessments</div>
-            <div className="nav-item">Candidates</div>
-            <div className="nav-item">Reports</div>
+            <button
+              type="button"
+              className={`nav-item ${activePage === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActivePage('dashboard')}
+            >
+              Dashboard
+            </button>
+
+            <button
+              type="button"
+              className={`nav-item ${activePage === 'jobs' ? 'active' : ''}`}
+              onClick={() => setActivePage('jobs')}
+            >
+              Jobs
+            </button>
+
+            <button type="button" className="nav-item">
+              Assessments
+            </button>
+
+            <button type="button" className="nav-item">
+              Candidates
+            </button>
+
+            <button type="button" className="nav-item">
+              Reports
+            </button>
           </nav>
         </aside>
 
         <section className="dashboard-content">
-          <div className="dashboard-header">
-            <div>
-              <p className="section-label">RecruitIQ Platform</p>
-              <h1>Recruiter Dashboard</h1>
-              <p className="section-subtitle">
-                Track hiring activity, candidate pipeline, and assessment performance in one place.
-              </p>
-            </div>
-          </div>
+          {activePage === 'dashboard' && (
+            <>
+              <div className="dashboard-header">
+                <div>
+                  <p className="section-label">RecruitIQ Platform</p>
+                  <h1>Recruiter Dashboard</h1>
+                  <p className="section-subtitle">
+                    Track hiring activity, candidate pipeline, and assessment performance in one place.
+                  </p>
+                </div>
+              </div>
 
-          <div className="stats-grid">
-            <div className="stat-card">
-              <p className="stat-label">Open Roles</p>
-              <h2>12</h2>
-              <span>+3 this week</span>
-            </div>
-            <div className="stat-card">
-              <p className="stat-label">Candidates</p>
-              <h2>48</h2>
-              <span>8 shortlisted</span>
-            </div>
-            <div className="stat-card">
-              <p className="stat-label">Assessments</p>
-              <h2>06</h2>
-              <span>2 pending review</span>
-            </div>
-          </div>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <p className="stat-label">Open Roles</p>
+                  <h2>12</h2>
+                  <span>+3 this week</span>
+                </div>
 
-          <div className="overview-panel">
-            <div className="overview-card">
-              <p className="section-label">Hiring Overview</p>
-              <h3>Frontend Developer</h3>
-              <p>24 applicants • 6 shortlisted • 2 interviews scheduled</p>
-            </div>
+                <div className="stat-card">
+                  <p className="stat-label">Candidates</p>
+                  <h2>48</h2>
+                  <span>8 shortlisted</span>
+                </div>
 
-            <div className="overview-card">
-              <p className="section-label">Top Insight</p>
-              <h3>Assessment Completion Rate</h3>
-              <p>81% of invited candidates completed their evaluation this week.</p>
-            </div>
-          </div>
+                <div className="stat-card">
+                  <p className="stat-label">Assessments</p>
+                  <h2>06</h2>
+                  <span>2 pending review</span>
+                </div>
+              </div>
+
+              <div className="overview-panel">
+                <div className="overview-card">
+                  <p className="section-label">Hiring Overview</p>
+                  <h3>Frontend Developer</h3>
+                  <p>24 applicants • 6 shortlisted • 2 interviews scheduled</p>
+                </div>
+
+                <div className="overview-card">
+                  <p className="section-label">Top Insight</p>
+                  <h3>Assessment Completion Rate</h3>
+                  <p>81% of invited candidates completed their evaluation this week.</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activePage === 'jobs' && (
+            <>
+              <div className="dashboard-header">
+                <div>
+                  <p className="section-label">Jobs Management</p>
+                  <h1>Jobs</h1>
+                  <p className="section-subtitle">
+                    Create and manage open roles for your hiring pipeline.
+                  </p>
+                </div>
+              </div>
+
+              <div className="jobs-layout">
+                <section className="job-form-card">
+                  <p className="section-label">Create Job</p>
+                  <h2>Add a new role</h2>
+
+                  <form className="job-form">
+                    <div className="form-group">
+                      <label htmlFor="job-title">Job title</label>
+                      <input
+                        id="job-title"
+                        type="text"
+                        placeholder="Frontend Developer"
+                        value={jobTitle}
+                        onChange={(event) => setJobTitle(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="department">Department</label>
+                      <input
+                        id="department"
+                        type="text"
+                        placeholder="Engineering"
+                        value={department}
+                        onChange={(event) => setDepartment(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="location">Location</label>
+                      <input
+                        id="location"
+                        type="text"
+                        placeholder="Remote"
+                        value={location}
+                        onChange={(event) => setLocation(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="employment-type">Employment type</label>
+                      <select
+                        id="employment-type"
+                        value={employmentType}
+                        onChange={(event) => setEmploymentType(event.target.value)}
+                      >
+                        <option value="">Select employment type</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                      </select>
+                    </div>
+
+                    {jobFormMessage && (
+                      <p
+                        className={
+                          jobFormMessage === 'Job created successfully'
+                            ? 'form-message success-message'
+                            : 'form-message error-message'
+                        }
+                        role="status"
+                      >
+                        {jobFormMessage}
+                      </p>
+                    )}
+
+                    <button type="button" onClick={handleCreateJob}>
+                      Create Job
+                    </button>
+                  </form>
+                </section>
+
+                <section className="job-list-card">
+                  <p className="section-label">Open Roles</p>
+                  <h2>Current jobs</h2>
+
+                  <div className="job-list-item">
+                    <div>
+                      <h3>Frontend Developer</h3>
+                      <p>Engineering • Remote • Full-time</p>
+                    </div>
+                    <span>Active</span>
+                  </div>
+
+                  <div className="job-list-item">
+                    <div>
+                      <h3>QA Automation Engineer</h3>
+                      <p>Quality Engineering • Hybrid • Full-time</p>
+                    </div>
+                    <span>Active</span>
+                  </div>
+                </section>
+              </div>
+            </>
+          )}
         </section>
       </main>
     );
@@ -125,10 +284,12 @@ function App() {
             <p>Open Roles</p>
             <h2>12</h2>
           </div>
+
           <div className="hero-metric-card">
             <p>Active Candidates</p>
             <h2>48</h2>
           </div>
+
           <div className="hero-metric-card">
             <p>Assessments Live</p>
             <h2>06</h2>
