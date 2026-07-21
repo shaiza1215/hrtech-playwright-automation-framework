@@ -15,6 +15,12 @@ function App() {
   const [employmentType, setEmploymentType] = useState('');
   const [jobFormMessage, setJobFormMessage] = useState('');
 
+  const [assessmentTitle, setAssessmentTitle] = useState('');
+  const [assessmentRole, setAssessmentRole] = useState('');
+  const [assessmentDuration, setAssessmentDuration] = useState('');
+  const [assessmentLevel, setAssessmentLevel] = useState('');
+  const [assessmentFormMessage, setAssessmentFormMessage] = useState('');
+
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -47,6 +53,20 @@ function App() {
     setEmploymentType('');
   };
 
+  const handleCreateAssessment = () => {
+    if (!assessmentTitle || !assessmentRole || !assessmentDuration || !assessmentLevel) {
+      setAssessmentFormMessage('Please fill all assessment details');
+      return;
+    }
+
+    setAssessmentFormMessage('Assessment created successfully');
+
+    setAssessmentTitle('');
+    setAssessmentRole('');
+    setAssessmentDuration('');
+    setAssessmentLevel('');
+  };
+
   if (isLoggedIn) {
     return (
       <main className="dashboard-layout">
@@ -76,7 +96,11 @@ function App() {
               Jobs
             </button>
 
-            <button type="button" className="nav-item">
+            <button
+              type="button"
+              className={`nav-item ${activePage === 'assessments' ? 'active' : ''}`}
+              onClick={() => setActivePage('assessments')}
+            >
               Assessments
             </button>
 
@@ -241,6 +265,117 @@ function App() {
                       <p>Quality Engineering • Hybrid • Full-time</p>
                     </div>
                     <span>Active</span>
+                  </div>
+                </section>
+              </div>
+            </>
+          )}
+
+          {activePage === 'assessments' && (
+            <>
+              <div className="dashboard-header">
+                <div>
+                  <p className="section-label">Assessment Management</p>
+                  <h1>Assessments</h1>
+                  <p className="section-subtitle">
+                    Create and manage role-based assessments for candidate evaluation.
+                  </p>
+                </div>
+              </div>
+
+              <div className="jobs-layout">
+                <section className="job-form-card">
+                  <p className="section-label">Create Assessment</p>
+                  <h2>Add a new assessment</h2>
+
+                  <form className="job-form">
+                    <div className="form-group">
+                      <label htmlFor="assessment-title">Assessment title</label>
+                      <input
+                        id="assessment-title"
+                        type="text"
+                        placeholder="Playwright Automation Test"
+                        value={assessmentTitle}
+                        onChange={(event) => setAssessmentTitle(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="assessment-role">Role</label>
+                      <input
+                        id="assessment-role"
+                        type="text"
+                        placeholder="QA Automation Engineer"
+                        value={assessmentRole}
+                        onChange={(event) => setAssessmentRole(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="assessment-duration">Duration</label>
+                      <select
+                        id="assessment-duration"
+                        value={assessmentDuration}
+                        onChange={(event) => setAssessmentDuration(event.target.value)}
+                      >
+                        <option value="">Select duration</option>
+                        <option value="30 Minutes">30 Minutes</option>
+                        <option value="45 Minutes">45 Minutes</option>
+                        <option value="60 Minutes">60 Minutes</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="assessment-level">Difficulty level</label>
+                      <select
+                        id="assessment-level"
+                        value={assessmentLevel}
+                        onChange={(event) => setAssessmentLevel(event.target.value)}
+                      >
+                        <option value="">Select difficulty level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                      </select>
+                    </div>
+
+                    {assessmentFormMessage && (
+                      <p
+                        className={
+                          assessmentFormMessage === 'Assessment created successfully'
+                            ? 'form-message success-message'
+                            : 'form-message error-message'
+                        }
+                        role="status"
+                      >
+                        {assessmentFormMessage}
+                      </p>
+                    )}
+
+                    <button type="button" onClick={handleCreateAssessment}>
+                      Create Assessment
+                    </button>
+                  </form>
+                </section>
+
+                <section className="job-list-card">
+                  <p className="section-label">Active Assessments</p>
+                  <h2>Assessment library</h2>
+
+                  <div className="job-list-item">
+                    <div>
+                      <h3>Playwright Automation Test</h3>
+                      <p>QA Automation Engineer • 45 Minutes • Intermediate</p>
+                    </div>
+                    <span>Live</span>
+                  </div>
+
+                  <div className="job-list-item">
+                    <div>
+                      <h3>Manual Testing Fundamentals</h3>
+                      <p>QA Tester • 30 Minutes • Beginner</p>
+                    </div>
+                    <span>Live</span>
                   </div>
                 </section>
               </div>
