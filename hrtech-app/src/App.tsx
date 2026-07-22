@@ -21,6 +21,33 @@ function App() {
   const [assessmentLevel, setAssessmentLevel] = useState('');
   const [assessmentFormMessage, setAssessmentFormMessage] = useState('');
 
+  const [candidateSearch, setCandidateSearch] = useState('');
+
+  const candidates = [
+    {
+      name: 'Aisha Khan',
+      role: 'Frontend Developer',
+      status: 'Shortlisted',
+      experience: '2 years',
+    },
+    {
+      name: 'Rohan Mehta',
+      role: 'QA Automation Engineer',
+      status: 'Assessment Pending',
+      experience: '1.5 years',
+    },
+    {
+      name: 'Priya Sharma',
+      role: 'Backend Developer',
+      status: 'Interview Scheduled',
+      experience: '3 years',
+    },
+  ];
+
+  const filteredCandidates = candidates.filter((candidate) =>
+    candidate.name.toLowerCase().includes(candidateSearch.toLowerCase())
+  );
+
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -104,7 +131,11 @@ function App() {
               Assessments
             </button>
 
-            <button type="button" className="nav-item">
+            <button
+              type="button"
+              className={`nav-item ${activePage === 'candidates' ? 'active' : ''}`}
+              onClick={() => setActivePage('candidates')}
+            >
               Candidates
             </button>
 
@@ -379,6 +410,59 @@ function App() {
                   </div>
                 </section>
               </div>
+            </>
+          )}
+
+          {activePage === 'candidates' && (
+            <>
+              <div className="dashboard-header">
+                <div>
+                  <p className="section-label">Candidate Pipeline</p>
+                  <h1>Candidates</h1>
+                  <p className="section-subtitle">
+                    Search and review candidates across active hiring pipelines.
+                  </p>
+                </div>
+              </div>
+
+              <section className="job-list-card">
+                <div className="candidate-header">
+                  <div>
+                    <p className="section-label">Candidate Search</p>
+                    <h2>Candidate directory</h2>
+                  </div>
+
+                  <div className="candidate-search-box">
+                    <label htmlFor="candidate-search">Search candidates</label>
+                    <input
+                      id="candidate-search"
+                      type="text"
+                      placeholder="Search by candidate name"
+                      value={candidateSearch}
+                      onChange={(event) => setCandidateSearch(event.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="candidate-list">
+                  {filteredCandidates.length > 0 ? (
+                    filteredCandidates.map((candidate) => (
+                      <div className="candidate-card" key={candidate.name}>
+                        <div>
+                          <h3>{candidate.name}</h3>
+                          <p>
+                            {candidate.role} • {candidate.experience}
+                          </p>
+                        </div>
+
+                        <span>{candidate.status}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="empty-state">No candidates found</p>
+                  )}
+                </div>
+              </section>
             </>
           )}
         </section>
